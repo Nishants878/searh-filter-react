@@ -1,23 +1,35 @@
-import logo from './logo.svg';
+import React,{useEffect, useState} from 'react'
 import './App.css';
-
+import Axios from 'axios'
+import HomePage from './HomePage'
 function App() {
+       
+  const [data, setData] = useState([]);
+  const [q, setQ] = useState("");
+
+
+  useEffect(() =>{
+        Axios.get("https://jsonplaceholder.typicode.com/users")
+        .then((res) =>{
+          setData(res.data)
+        })
+        .catch((err)=>{
+          console.log(err)
+        })
+  },[])
+
+  function search (a) {
+    return a.filter((b) => b.name.toLowerCase().indexOf(q) > -1);
+}
+  
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div>
+        <input type="search" value={q} onChange={(e) => setQ(e.target.value)} />
+      </div>
+         <HomePage  data={search(data)} />
     </div>
   );
 }
